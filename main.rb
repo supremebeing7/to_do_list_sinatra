@@ -31,7 +31,6 @@ configure :development do
 end
 
 get '/' do
-  @tasks = Task.all
   @lists = List.all(order: [:name])
   haml :index
 end
@@ -41,8 +40,8 @@ get '/:task' do
   haml :task
 end
 
-post '/' do
-  @task = Task.create(params[:task])
+post '/:id' do
+  List.get(params[:id]).tasks.create(params['task'])
   redirect to('/')
 end
 
@@ -53,7 +52,7 @@ end
 
 put '/task/:id' do
   @task = Task.get(params[:id])
-  @task.completed_at = @task.completed_at.nil? ? Time.now : nil
+  @task.completed_at = @task.completed_at.nil? ? Time.now.localtime : nil
   @task.save
   redirect to('/')
 end

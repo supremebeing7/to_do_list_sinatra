@@ -1,0 +1,13 @@
+%li.list{id: list.id}
+  = list.name.capitalize
+  %form.delete(action="/list/#{list.id}" method="POST")
+    %input(type="hidden" name="_method" value="DELETE")
+    %input(type="submit" value="✗" title="Delete list")
+
+  %form.new(action='/#{list.id}' method='post')
+    .form-group
+      %input(type='text' name='task[name]')
+      %input(type="hidden" name="task[list_id]" value="#{list.id}")
+  %ul.tasks
+  - list.tasks.each do |task|
+    = haml :task, locals: { task: task }
