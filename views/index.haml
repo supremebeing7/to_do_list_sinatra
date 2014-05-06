@@ -1,3 +1,5 @@
-%h2 My Tasks
-%ul.tasks
-  %li Get Milk
+%h1 New Task
+%form(action='/' method='post')
+  .form-group
+    %input(type='text' name='task')
+  %input.btn.btn-primary(type='submit' value='New task')
