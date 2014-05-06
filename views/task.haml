@@ -1,15 +1,15 @@
-%li.task{id: task.id}
-  .inline
-    = task.name.capitalize
-    - if task.completed_at
-      = " - Completed: #{task.completed_at.strftime('%r %D')}"
-    %form.update(action="/task/#{task.id}" method="POST")
-      %input(type="hidden" name="_method" value="PUT")
-      - if task.completed_at.nil?
-        %input.inline.btn.btn-primary.btn-xs(type="submit" value="Complete Task")
-      - else
-        %input.inline.btn.btn-primary.btn-xs(type="submit" value="Uncomplete Task")
+%li.task{id: task.id, class: (task.completed_at.nil? ? "" : "completed")}
+
+  = task.name.capitalize
+  %form.update(action="/task/#{task.id}" method="POST")
+    %input(type="hidden" name="_method" value="PUT")
+    - if task.completed_at.nil?
+      %input(type="submit" value="  " title="Complete Task")
+    - else
+      %input(type="submit" value="✓" title="Uncomplete Task")
 
   %form.delete(action="/task/#{task.id}" method="POST")
     %input(type="hidden" name="_method" value="DELETE")
-    %input.btn.btn-primary.btn-xs(type="submit" value="Delete Task")
+    %input(type="submit" value="✗" title="Delete Task")
+- if task.completed_at
+  = " - Completed: #{task.completed_at.strftime('%r %D')}"

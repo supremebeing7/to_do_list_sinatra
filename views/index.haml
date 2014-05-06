@@ -1,10 +1,18 @@
 .col-sm-6
-  %h1 All Tasks
-  - @tasks.each do |task|
-    = haml :task, locals: { task: task }
-.col-sm-6
   %h1 New Task
   %form(action='/' method='post')
     .form-group
       %input(type='text' name='task[name]')
     %input.btn.btn-primary(type='submit' value='New task')
+  %h1 All Tasks
+  - @tasks.each do |task|
+    = haml :task, locals: { task: task }
+.col-sm-6
+  %h1 New List
+  %form.new(action='/new/list' method='post')
+    .form-group
+      %input(type='text' name='list[name]')
+    %input.btn.btn-primary(type='submit' value='New list')
+  %ul.lists
+  - @lists.each do |list|
+    = haml :list, locals: { list: list }
