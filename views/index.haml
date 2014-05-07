@@ -1,11 +1,10 @@
 .col-sm-6
   %h2 New List
-  %form.new(action='/new/list' method='post')
+  %form#form.new(action='/new/list' method='post')
     .form-group
-      %input(type='text' name='list[name]')
+      %input(type='text' id='newlist' name='list[name]' value='new list')
     %input.btn.btn-primary(type='submit' value='New list')
   %h3 All Lists
-  %ul.lists
+  %ul.lists#lists
   - @lists.each do |list|
     = haml :list, locals: { list: list }
-

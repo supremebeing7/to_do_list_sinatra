@@ -2,6 +2,7 @@
 %html
   %head
     %meta(charset="utf-8")
+    = include_gon
     %title Just Do It
     %link(rel="stylesheet" type="text/css" href="/bootstrap.min.css")
     %link(rel="stylesheet" type="text/css" href="/styles.css")
@@ -9,4 +10,35 @@
     .container
       .row
         %h1 Just Do It
+        %h4#connection
         = yield
+    :javascript
+      window.onload = function(){
+        (function(){
+          var show = function(el){
+            return function(msg){
+              alert(gon.list);
+              el.innerHTML = "<li class='list'>" + msg + "</li>" + el.innerHTML;
+            }
+          }(document.getElementById('lists'));
+
+          var connection = function(el){
+            return function(msg){ el.innerHTML = msg; }
+          }(document.getElementById('connection'));
+
+          var ws       = new WebSocket('ws://' + window.location.host + window.location.pathname);
+          ws.onopen    = function()  { connection('Connected!'); };
+          ws.onclose   = function()  { connection('Disconnected...'); }
+          ws.onmessage = function(m) { show(m.data); };
+
+          var sender = function(f){
+            var input     = document.getElementById('newlist');
+            input.onclick = function(){ input.value = "" };
+            f.onsubmit    = function(){
+              ws.send(input.value);
+              input.value = "new list";
+              return false;
+            }
+          }(document.getElementById('form'));
+        })();
+      }

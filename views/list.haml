@@ -6,7 +6,7 @@
 
   %form.new(action='/#{list.id}' method='post')
     .form-group
-      %input(type='text' name='task[name]')
+      %input(type='text' name='task[name]' value='new task')
       %input(type="hidden" name="task[list_id]" value="#{list.id}")
   %ul.tasks
   - list.tasks.each do |task|

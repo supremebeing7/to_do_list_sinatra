@@ -1,9 +1,17 @@
 require 'sinatra'
-require 'thin'
 require 'haml'
 require 'data_mapper'
 require 'binding_of_caller'
 require 'better_errors'
+require 'pry'
+require 'gon-sinatra'
+
+require 'sinatra-websocket'
+
+set :server, 'thin'
+set :sockets, []
+
+Sinatra::register Gon::Sinatra
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/development.db")
 class Task
@@ -32,7 +40,24 @@ end
 
 get '/' do
   @lists = List.all(order: [:name])
-  haml :index
+  if !request.websocket?
+    haml :index
+  else
+    request.websocket do |ws|
+      ws.onopen do
+        settings.sockets << ws
+      end
+      ws.onmessage do |msg|
+        @list = List.create(name: msg)
+        gon.list = @list
+        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+      end
+      ws.onclose do
+        warn("websocket closed")
+        settings.sockets.delete(ws)
+      end
+    end
+  end
 end
 
 get '/:task' do
