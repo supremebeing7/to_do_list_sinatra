@@ -2,7 +2,6 @@
 %html
   %head
     %meta(charset="utf-8")
-    = include_gon
     %title Just Do It
     %link(rel="stylesheet" type="text/css" href="/bootstrap.min.css")
     %link(rel="stylesheet" type="text/css" href="/styles.css")
@@ -17,7 +16,6 @@
         (function(){
           var show = function(el){
             return function(msg){
-              alert(gon.list);
               el.innerHTML = "<li class='list'>" + msg + "</li>" + el.innerHTML;
             }
           }(document.getElementById('lists'));

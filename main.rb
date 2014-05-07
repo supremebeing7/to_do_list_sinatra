@@ -4,7 +4,6 @@ require 'data_mapper'
 require 'binding_of_caller'
 require 'better_errors'
 require 'pry'
-require 'gon-sinatra'
 
 require 'sinatra-websocket'
 
@@ -49,7 +48,6 @@ get '/' do
       end
       ws.onmessage do |msg|
         @list = List.create(name: msg)
-        gon.list = @list
         EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
       end
       ws.onclose do
